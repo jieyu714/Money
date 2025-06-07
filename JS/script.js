@@ -126,10 +126,10 @@ async function showData() {
         tmp = `<tr>
                         <td></td>
                         <td>total</td>
-                        <td>${(sum2 == 0 ? '' : (sum2 > 0 ? "Get" : "Pay"))}</td>
+                        <td>${(sum1 == 0 ? '' : (sum1 > 0 ? "Get" : "Pay"))}</td>
                         <td></td>
                         <td></td>
-                        <td>${Math.abs(sum2)}</td>
+                        <td>${Math.abs(sum1)}</td>
                     </tr>`; 
 
         htmlContent += tmp;
