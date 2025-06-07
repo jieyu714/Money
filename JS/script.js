@@ -6,7 +6,35 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 let userData, userError;
 
+function showLoading() {
+    Swal.fire({
+        title: '載入中...',
+        html: '請稍候...',
+        allowOutsideClick: false,
+        showConfirmButton: false,
+        didOpen: () => {
+            Swal.showLoading()
+        }
+    });
+
+    const clickableElements = document.querySelectorAll('button, .clickable-hours');
+    clickableElements.forEach(element => {
+        element.disabled = true;
+    });
+}
+
+function hideLoading() {
+    Swal.close();
+
+    const clickableElements = document.querySelectorAll('button, .clickable-hours');
+    clickableElements.forEach(element => {
+        element.disabled = false;
+    });
+}
+
 async function importData(group) {
+
+    showLoading();
 
     const personName = document.getElementById('name').value;
 
@@ -80,13 +108,15 @@ async function showData() {
             sum += parseInt(userData[i].amount) * (userData[i].buyOrSell.toLowerCase() == "buy" ? -1 : 1);
         }
 
+        let isBold = (sum == 0 ? '<b>' : '');
+        let boldEnd = (sum == 0 ? '</b>' : '');
         let tmp = `<tr>
                         <td></td>
-                        <td>total</td>
+                        <td>${isBold}total${boldEnd}</td>
                         <td>${(sum == 0 ? '' : (sum > 0 ? "Get" : "Pay"))}</td>
                         <td></td>
                         <td></td>
-                        <td>${Math.abs(sum)}</td>
+                        <td>${isBold}${Math.abs(sum)}${boldEnd}</td>
                     </tr>`; 
 
         htmlContent += tmp;
@@ -97,9 +127,16 @@ async function showData() {
         tableBody.innerHTML = "<div>查無此人紀錄</div>";
         return
     }
+
+    hideLoading();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById("name").addEventListener("keypress", function(event) {
+        if (event.key === "Enter") {
+            importData('query');
+        }
+    });
     document.getElementById("query").addEventListener("click", function() {
         importData('query');
     });
