@@ -88,7 +88,7 @@ async function showData() {
     if (userData.length) {
         tableHead.innerHTML = "<tr><th>Name</th><th>Date</th><th>Buy or Sell</th><th>Store</th><th>Items</th><th>Amount</th></tr>";
         
-        let sum = 0;
+        let sum1 = 0, sum2 = 0;
 
         for (let i = 0; i < userData.length; i++) {
             let isBold = userData[i].finish ? '<b>' : '';
@@ -105,18 +105,31 @@ async function showData() {
 
             htmlContent += tmp;
             
-            sum += parseInt(userData[i].amount) * (userData[i].buyOrSell.toLowerCase() == "buy" ? -1 : 1);
+            sum1 += parseInt(userData[i].amount) * (userData[i].buyOrSell.toLowerCase() == "buy" ? -1 : 1);
+            sum2 += parseInt(userData[i].amount) * (userData[i].buyOrSell.toLowerCase() == "buy" ? -1 : 1) * (!userData[i].finish);
         }
 
-        let isBold = (sum == 0 ? '<b>' : '');
-        let boldEnd = (sum == 0 ? '</b>' : '');
+        let isBold = (sum2 == 0 ? '<b>' : '');
+        let boldEnd = (sum2 == 0 ? '</b>' : '');
+
         let tmp = `<tr>
                         <td></td>
-                        <td>${isBold}total${boldEnd}</td>
-                        <td>${(sum == 0 ? '' : (sum > 0 ? "Get" : "Pay"))}</td>
+                        <td>${isBold}count${boldEnd}</td>
+                        <td>${(sum2 == 0 ? '' : (sum2 > 0 ? "Get" : "Pay"))}</td>
                         <td></td>
                         <td></td>
-                        <td>${isBold}${Math.abs(sum)}${boldEnd}</td>
+                        <td>${isBold}${Math.abs(sum2)}${boldEnd}</td>
+                    </tr>`; 
+
+        htmlContent += tmp;
+
+        tmp = `<tr>
+                        <td></td>
+                        <td>total</td>
+                        <td>${(sum2 == 0 ? '' : (sum2 > 0 ? "Get" : "Pay"))}</td>
+                        <td></td>
+                        <td></td>
+                        <td>${Math.abs(sum2)}</td>
                     </tr>`; 
 
         htmlContent += tmp;
